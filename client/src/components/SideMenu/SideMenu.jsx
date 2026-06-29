@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { menuItems } from "./menuData";
 import MenuItem from "./MenuItem";
@@ -69,13 +70,13 @@ function SideMenu({ open, setOpen }) {
 
             <div className="border-t border-slate-800 p-6">
 
-              <button className="mb-3 w-full rounded-xl border border-slate-700 py-3 text-white">
+              <Link to="/login" className="mb-3 block w-full rounded-xl border border-slate-700 py-3 text-center text-white">
                 Login
-              </button>
+              </Link>
 
-              <button className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 py-3 font-semibold text-white">
+              <Link to="/register" className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 py-3 text-center font-semibold text-white block">
                 Get Started
-              </button>
+              </Link>
 
             </div>
 

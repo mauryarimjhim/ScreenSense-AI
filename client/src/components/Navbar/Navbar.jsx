@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import {Menu , BarChart3} from "lucide-react";
 import SideMenu from "../SideMenu/SideMenu";
@@ -22,24 +23,12 @@ function Navbar() {
             </div>
             {/*Right sside*/}
             <div className="flex items-center gap-4">
-                <button className="rounded-xl border border-slate-700  px-6 py-2.5 text-white transition hover:border-violet-500 hover:bg-slate-900">
-                    Login </button>
-                <button
-            className="
-            rounded-xl
-            bg-gradient-to-r
-            from-violet-600
-            to-purple-600
-            px-6
-            py-2.5
-            font-medium
-            text-white
-            transition
-            hover:scale-105
-            "
-          >
-            Sign Up
-          </button>
+                <Link to="/login" className="rounded-xl border border-slate-700 px-6 py-2.5 text-white transition hover:border-violet-500 hover:bg-slate-900">
+                    Login
+                </Link>
+                <Link to="/register" className="rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-6 py-2.5 font-medium text-white transition hover:scale-105">
+                    Sign Up
+                </Link>
             
           <button
               onClick={() => setIsSideMenuOpen(true)}
