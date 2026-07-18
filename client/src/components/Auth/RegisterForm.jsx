@@ -6,11 +6,12 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function RegisterForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -160,6 +161,8 @@ function RegisterForm() {
       {/* Create Account */}
 
       <button
+        type="button"
+        onClick={() => navigate("/dashboard")}
         className="mt-8 w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 py-4 font-semibold text-white transition hover:scale-[1.02]"
       >
         Create Account

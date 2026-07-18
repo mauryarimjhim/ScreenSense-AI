@@ -47,7 +47,7 @@ function AIInsights() {
   const [activeTip, setActiveTip] = useState(0);
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="dashboard-page space-y-8 sm:space-y-10">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">

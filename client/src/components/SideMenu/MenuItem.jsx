@@ -1,6 +1,10 @@
-function MenuItem({ icon: Icon, title }) {
+import { NavLink } from "react-router-dom";
+
+function MenuItem({ icon: Icon, title, path, onNavigate }) {
   return (
-    <button
+    <NavLink
+      to={path}
+      onClick={onNavigate}
       className="
       flex
       w-full
@@ -17,7 +21,7 @@ function MenuItem({ icon: Icon, title }) {
     >
       <Icon size={22} />
       <span className="text-lg">{title}</span>
-    </button>
+    </NavLink>
   );
 }
 

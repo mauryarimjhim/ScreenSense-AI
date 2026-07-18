@@ -29,8 +29,10 @@ function DashboardLayout() {
         {/* Main content */}
         <div className="flex-1 min-w-0">
           <Topbar onMenuClick={() => setSidebarOpen(true)} />
-          <main className="p-4 sm:p-6 lg:p-8">
-            <Outlet />
+          <main className="mx-auto w-full max-w-[1600px] p-5 sm:p-8 lg:p-10">
+            <section className="dashboard-content">
+              <Outlet />
+            </section>
           </main>
         </div>
       </div>

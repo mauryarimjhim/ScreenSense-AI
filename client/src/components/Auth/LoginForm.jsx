@@ -1,9 +1,10 @@
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div>
@@ -102,6 +103,8 @@ function LoginForm() {
       {/* Login */}
 
       <button
+        type="button"
+        onClick={() => navigate("/dashboard")}
         className="mt-8 w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 py-4 font-semibold text-white transition hover:scale-[1.02]"
       >
         Log In

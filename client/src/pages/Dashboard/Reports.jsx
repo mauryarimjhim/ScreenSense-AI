@@ -56,7 +56,7 @@ function Reports() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="dashboard-page space-y-8 sm:space-y-10">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>

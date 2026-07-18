@@ -107,6 +107,39 @@ body {
   transform: translateY(-2px);
 }
 
+/* Dashboard layout: shared breathing room for every analytics page. */
+.dashboard-content {
+  min-width: 0;
+}
+
+.dashboard-page {
+  min-width: 0;
+}
+
+.dashboard-page .glass-card {
+  padding: 1.5rem;
+}
+
+.dashboard-page .grid {
+  column-gap: 1.5rem;
+  row-gap: 1.5rem;
+}
+
+.dashboard-page h1 {
+  letter-spacing: -0.025em;
+}
+
+@media (min-width: 1024px) {
+  .dashboard-page .glass-card {
+    padding: 1.75rem;
+  }
+
+  .dashboard-page .grid {
+    column-gap: 1.75rem;
+    row-gap: 1.75rem;
+  }
+}
+
 /* ── Glow Effects ── */
 .glow-violet {
   box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);

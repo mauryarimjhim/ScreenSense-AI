@@ -3,7 +3,7 @@ import FeaturesCard from "./FeaturesCard";
 
 function Features() {
   return (
-    <section className="bg-[#060B17] py-28">
+    <section id="features" className="bg-[#060B17] py-20 sm:py-28">
 
       <div className="mx-auto max-w-7xl px-6">
 

@@ -24,36 +24,36 @@ export const menuItems = [
   {
     title: "App Analytics",
     icon: Smartphone,
-    path: "/analytics",
+    path: "/dashboard/app-analytics",
   },
   {
     title: "Behavior Analytics",
     icon: BarChart3,
-    path: "/behavior",
+    path: "/dashboard/behaviour",
   },
   {
     title: "AI Insights",
     icon: BrainCircuit,
-    path: "/insights",
+    path: "/dashboard/ai-insights",
   },
   {
     title: "Predictions",
     icon: Sparkles,
-    path: "/prediction",
+    path: "/dashboard/predictions",
   },
   {
     title: "Reports",
     icon: FileText,
-    path: "/reports",
+    path: "/dashboard/reports",
   },
   {
     title: "Goals",
     icon: Target,
-    path: "/goals",
+    path: "/dashboard/goals",
   },
   {
     title: "Settings",
     icon: Settings,
-    path: "/settings",
+    path: "/dashboard/settings",
   },
 ];

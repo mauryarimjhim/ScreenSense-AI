@@ -61,6 +61,8 @@ function SideMenu({ open, setOpen }) {
                   key={item.title}
                   icon={item.icon}
                   title={item.title}
+                  path={item.path}
+                  onNavigate={() => setOpen(false)}
                 />
               ))}
 
