@@ -22,6 +22,7 @@ import {
   ToggleRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { logout } from "../../utils/auth";
 
 const tabs = [
   { key: "profile", label: "Profile", icon: User },
@@ -86,6 +87,11 @@ function Settings() {
 
   // Theme
   const [theme, setTheme] = useState("dark");
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -323,13 +329,13 @@ function Settings() {
   };
 
   return (
-    <div className="dashboard-page space-y-8 sm:space-y-10">
+    <div className="dashboard-page">
       {/* Header */}
-      <div>
+      <div className="page-header">
         <h1 className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
           Settings
         </h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="text-sm text-slate-400">
           Manage your account preferences and configurations.
         </p>
       </div>
@@ -355,7 +361,7 @@ function Settings() {
 
           {/* Logout */}
           <button
-            onClick={() => navigate("/")}
+            onClick={handleLogout}
             className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300"
           >
             <LogOut size={18} />

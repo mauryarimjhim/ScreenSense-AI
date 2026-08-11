@@ -58,13 +58,13 @@ const chartTooltipStyle = {
 
 function BehaviourAnalytics() {
   return (
-    <div className="dashboard-page space-y-8 sm:space-y-10">
+    <div className="dashboard-page">
       {/* Header */}
-      <div>
+      <div className="page-header">
         <h1 className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
           Behaviour Analytics
         </h1>
-        <p className="mt-1 text-sm text-slate-400">
+        <p className="text-sm text-slate-400">
           Understand your digital habits and patterns.
         </p>
       </div>

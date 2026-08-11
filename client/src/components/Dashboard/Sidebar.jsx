@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { logout } from "../../utils/auth";
 import {
   LayoutDashboard,
   Smartphone,
@@ -26,6 +27,11 @@ const menuItems = [
 
 function Sidebar({ onClose }) {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <aside className="flex h-screen w-72 flex-col border-r border-slate-800/60 bg-[#0B1120]">
@@ -96,7 +102,7 @@ function Sidebar({ onClose }) {
         </div>
 
         <button
-          onClick={() => navigate("/")}
+          onClick={handleLogout}
           className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300"
         >
           <LogOut size={18} />

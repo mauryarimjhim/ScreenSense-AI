@@ -14,13 +14,13 @@ import {
 
 function Overview() {
   return (
-    <div className="dashboard-page space-y-8 sm:space-y-10">
+    <div className="dashboard-page">
       {/* Header */}
-      <div>
+      <div className="page-header">
         <h1 className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
           Good Evening, Rimjhim 👋
         </h1>
-        <p className="mt-2 text-sm text-slate-400 sm:text-base">
+        <p className="text-sm text-slate-400 sm:text-base">
           Here's your digital wellbeing summary for today.
         </p>
       </div>

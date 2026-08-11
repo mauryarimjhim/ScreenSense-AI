@@ -56,14 +56,14 @@ function Reports() {
   };
 
   return (
-    <div className="dashboard-page space-y-8 sm:space-y-10">
+    <div className="dashboard-page">
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
+        <div className="page-header">
           <h1 className="text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
             Reports
           </h1>
-          <p className="mt-1 text-sm text-slate-400">
+          <p className="text-sm text-slate-400">
             Download and review your screen time reports.
           </p>
         </div>

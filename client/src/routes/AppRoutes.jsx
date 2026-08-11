@@ -12,6 +12,7 @@ import Predictions from "../pages/Dashboard/Predictions";
 import Reports from "../pages/Dashboard/Reports";
 import Goals from "../pages/Dashboard/Goals";
 import Settings from "../pages/Dashboard/Settings";
+import ProtectedRoute from "../components/Auth/ProtectedRoute";
 
 function AppRoutes() {
   return (
@@ -22,16 +23,18 @@ function AppRoutes() {
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-        {/* Dashboard nested routes */}
-        <Route path="/dashboard" element={<DashboardLayout />}>
-          <Route index element={<Overview />} />
-          <Route path="app-analytics" element={<AppAnalytics />} />
-          <Route path="behaviour" element={<BehaviourAnalytics />} />
-          <Route path="ai-insights" element={<AIInsights />} />
-          <Route path="predictions" element={<Predictions />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="goals" element={<Goals />} />
-          <Route path="settings" element={<Settings />} />
+        <Route element={<ProtectedRoute />}>
+          {/* Dashboard nested routes */}
+          <Route path="/dashboard" element={<DashboardLayout />}>
+            <Route index element={<Overview />} />
+            <Route path="app-analytics" element={<AppAnalytics />} />
+            <Route path="behaviour" element={<BehaviourAnalytics />} />
+            <Route path="ai-insights" element={<AIInsights />} />
+            <Route path="predictions" element={<Predictions />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="goals" element={<Goals />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

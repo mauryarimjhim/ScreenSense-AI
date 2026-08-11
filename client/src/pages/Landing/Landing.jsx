@@ -4,10 +4,12 @@ import Hero from "../../components/Hero/Hero";
 import Features from "../../components/Features/Features";
 function Landing(){
     return (
-        <div className="min-h-screen  bg-[#060B17] text-white">
+        <div className="min-h-screen bg-[#060B17] text-white">
             <Navbar/>
-            <Hero/>
-            <Features/>
+            <main className="space-y-0">
+              <Hero/>
+              <Features/>
+            </main>
             <Footer/>
         </div>
     );

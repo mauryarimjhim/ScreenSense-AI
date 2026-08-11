@@ -5,8 +5,8 @@ import BackgroundGlow from "./BackgroundGlow";
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#060B17]">
-      <div className="mx-auto flex min-h-[85vh] max-w-7xl flex-col-reverse items-center justify-between gap-16 px-6 py-16 lg:flex-row">
+    <section className="relative overflow-hidden bg-[#060B17] pb-16 pt-8 sm:pb-24 sm:pt-12 lg:pb-32">
+      <div className="mx-auto flex min-h-[80vh] max-w-7xl flex-col-reverse items-center justify-between gap-12 px-6 py-12 sm:gap-16 sm:px-8 lg:flex-row lg:gap-20 lg:py-20">
 
         <HeroContent />
 

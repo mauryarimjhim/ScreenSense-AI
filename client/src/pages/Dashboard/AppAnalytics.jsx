@@ -18,7 +18,7 @@ function AppAnalytics() {
   }, [searchQuery]);
 
   return (
-    <div className="dashboard-page space-y-8 sm:space-y-10">
+    <div className="dashboard-page">
       <AppAnalyticsHeader
         activeFilter={activeFilter}
         setActiveFilter={setActiveFilter}
