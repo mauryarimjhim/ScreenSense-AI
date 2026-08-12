@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "ScreenSense AI Tracker",
+  "version": "1.0.0",
+  "description": "Tracks browser activity for ScreenSense AI",
+  "permissions": [
+    "tabs"
+  ],
+  "host_permissions": [
+    "*://*.instagram.com/*",
+    "*://*.youtube.com/*",
+    "*://*.linkedin.com/*",
+    "*://*.spotify.com/*",
+    "http://localhost:5000/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
