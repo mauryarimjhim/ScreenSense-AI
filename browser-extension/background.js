@@ -3,7 +3,7 @@ let activityStartTime = null;
 
 const activityUsage = {};
 
-const API_URL = "http://localhost:5000";
+const API_URL = "http://127.0.0.1:5000";
 const JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhN2IwZGQ5YzMzYjczZjM5ODgxMGU1NSIsImlhdCI6MTc4NjQ0OTM4MiwiZXhwIjoxNzg3MDU0MTgyfQ.baFyQbM9hhUPmjHhB8dGhWMu-OrVhgdgrHjUmWOGZOs";
 
 async function sendUsageToBackend() {
@@ -54,6 +54,10 @@ async function sendUsageToBackend() {
         "ScreenSense backend response:",
         data
       );
+
+      if (data.success) {
+        activityUsage[appName] = {};
+        }
     }
 
   } catch (error) {
