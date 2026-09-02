@@ -8,10 +8,19 @@ const Usage = require("../models/Usage");
 
 exports.getDashboardAnalytics = async (req, res) => {
   try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
 
-    // Get usage data of logged-in user
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setDate(endOfDay.getDate() + 1);
+
+    // Get today's usage data of logged-in user
     const usageData = await Usage.find({
       userId: req.user.id,
+      date: {
+        $gte: startOfDay,
+        $lt: endOfDay,
+      },
     }).sort({
       date: -1,
     });
@@ -144,13 +153,22 @@ exports.getDashboardAnalytics = async (req, res) => {
 
 exports.getActivityAnalytics = async (req, res) => {
   try {
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+
+    const endOfDay = new Date(startOfDay);
+    endOfDay.setDate(endOfDay.getDate() + 1);
 
     // --------------------------------------------------
-    // Get usage data of logged-in user
+    // Get today's usage data of logged-in user
     // --------------------------------------------------
 
     const usageData = await Usage.find({
       userId: req.user.id,
+      date: {
+        $gte: startOfDay,
+        $lt: endOfDay,
+      },
     }).sort({
       date: -1,
     });

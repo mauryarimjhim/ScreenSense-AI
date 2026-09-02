@@ -318,6 +318,30 @@ exports.getInsights = async (req, res) => {
     // Response
     // --------------------------------------------------
 
+    const recommendationInsight =
+      insights.find((item) => item.type === "recommendation") ||
+      insights.find((item) => item.type === "warning") ||
+      insights[0];
+
+    const topActivity = mostDistractingActivity
+      ? mostDistractingActivity[0]
+      : null;
+
+    const topActivityMinutes = mostDistractingActivity
+      ? mostDistractingActivity[1]
+      : 0;
+
+    const recommendation = {
+      summary: mostUsedApp
+        ? `${mostUsedApp[0]} is your most used app today with ${mostUsedApp[1]} minutes${
+            topActivity
+              ? `, mainly on ${topActivity} (${topActivityMinutes} min).`
+              : "."
+          }`
+        : "Keep tracking your usage to unlock personalized recommendations.",
+      tip: recommendationInsight?.message || "",
+    };
+
     return res.status(200).json({
       success: true,
 
@@ -329,6 +353,7 @@ exports.getInsights = async (req, res) => {
         productivityScore,
       },
 
+      recommendation,
       insights,
     });
 

@@ -1,6 +1,52 @@
 const Goal = require("../models/Goal");
 const Usage = require("../models/Usage");
 
+const DEFAULT_SCREEN_TIME_GOAL = 360;
+
+function getDayRange(dayOffset = 0) {
+  const start = new Date();
+  start.setDate(start.getDate() + dayOffset);
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+
+  return { start, end };
+}
+
+async function calculateStreak(userId, targetMinutes) {
+  let streak = 0;
+
+  for (let dayOffset = 0; dayOffset < 30; dayOffset += 1) {
+    const { start, end } = getDayRange(-dayOffset);
+
+    const usage = await Usage.find({
+      userId,
+      date: {
+        $gte: start,
+        $lt: end,
+      },
+    });
+
+    if (usage.length === 0) {
+      break;
+    }
+
+    const totalScreenTime = usage.reduce(
+      (sum, record) => sum + record.totalTime,
+      0
+    );
+
+    if (totalScreenTime <= targetMinutes) {
+      streak += 1;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
 // ======================================================
 // CREATE GOAL
 // POST /api/goals
@@ -223,27 +269,7 @@ exports.getGoalProgress = async (req, res) => {
       userId: req.user.id,
     });
 
-    if (goals.length === 0) {
-      return res.status(200).json({
-        success: true,
-        message: "No goals found",
-        progress: [],
-      });
-    }
-
-    // ------------------------------------------
-    // Today's date range
-    // ------------------------------------------
-
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-
-    const endOfDay = new Date(startOfDay);
-    endOfDay.setDate(endOfDay.getDate() + 1);
-
-    // ------------------------------------------
-    // Get today's usage
-    // ------------------------------------------
+    const { start: startOfDay, end: endOfDay } = getDayRange(0);
 
     const usage = await Usage.find({
       userId: req.user.id,
@@ -252,10 +278,6 @@ exports.getGoalProgress = async (req, res) => {
         $lt: endOfDay,
       },
     });
-
-    // ------------------------------------------
-    // Calculate totals
-    // ------------------------------------------
 
     let totalScreenTime = 0;
     let productiveTime = 0;
@@ -276,32 +298,43 @@ exports.getGoalProgress = async (req, res) => {
       appUsage[record.appName] += record.totalTime;
     });
 
-    // ------------------------------------------
-    // Calculate progress
-    // ------------------------------------------
+    const goalsToTrack =
+      goals.length > 0
+        ? goals
+        : [
+            {
+              _id: "default-screen-time",
+              goalType: "screen_time",
+              appName: null,
+              targetMinutes: DEFAULT_SCREEN_TIME_GOAL,
+              period: "daily",
+              isDefault: true,
+            },
+          ];
 
-    const progress = goals.map((goal) => {
-
+    const progress = goalsToTrack.map((goal) => {
       let currentMinutes = 0;
 
       if (goal.goalType === "screen_time") {
         currentMinutes = totalScreenTime;
-      }
-
-      else if (goal.goalType === "productive_time") {
+      } else if (goal.goalType === "productive_time") {
         currentMinutes = productiveTime;
-      }
-
-      else if (goal.goalType === "app_limit") {
+      } else if (goal.goalType === "app_limit") {
         currentMinutes = appUsage[goal.appName] || 0;
       }
 
       const percentage =
         goal.targetMinutes > 0
-          ? Math.round(
-              (currentMinutes / goal.targetMinutes) * 100
+          ? Math.min(
+              Math.round((currentMinutes / goal.targetMinutes) * 100),
+              100
             )
           : 0;
+
+      const remainingMinutes = Math.max(
+        goal.targetMinutes - currentMinutes,
+        0
+      );
 
       return {
         goalId: goal._id,
@@ -309,16 +342,30 @@ exports.getGoalProgress = async (req, res) => {
         appName: goal.appName,
         targetMinutes: goal.targetMinutes,
         currentMinutes,
+        remainingMinutes,
         percentage,
         completed: currentMinutes >= goal.targetMinutes,
+        isDefault: Boolean(goal.isDefault),
+        status:
+          currentMinutes >= goal.targetMinutes
+            ? "exceeded"
+            : percentage >= 80
+              ? "close"
+              : "on_track",
       };
     });
+
+    const primaryGoal = progress[0];
+    const streak = await calculateStreak(
+      req.user.id,
+      primaryGoal?.targetMinutes || DEFAULT_SCREEN_TIME_GOAL
+    );
 
     return res.status(200).json({
       success: true,
       progress,
+      streak,
     });
-
   } catch (error) {
     console.error("Goal progress error:", error);
 
