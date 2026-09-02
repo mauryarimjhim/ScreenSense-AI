@@ -5,12 +5,13 @@ import BackgroundGlow from "./BackgroundGlow";
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#060B17] pb-16 pt-8 sm:pb-24 sm:pt-12 lg:pb-32">
-      <div className="mx-auto flex min-h-[80vh] max-w-7xl flex-col-reverse items-center justify-between gap-12 px-6 py-12 sm:gap-16 sm:px-8 lg:flex-row lg:gap-20 lg:py-20">
+    <section className="relative isolate overflow-hidden bg-[#060B17] py-12 sm:py-16 lg:py-20">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_15%,rgba(124,58,237,0.2),transparent_32%),radial-gradient(circle_at_90%_45%,rgba(14,165,233,0.12),transparent_28%)]" />
+      <div className="site-container relative grid min-h-[calc(100vh-5rem)] items-center gap-12 py-8 lg:grid-cols-2 lg:gap-16 lg:py-12">
 
         <HeroContent />
 
-        <div className="relative flex justify-center">
+        <div className="relative flex w-full justify-center">
           <BackgroundGlow />
 
           <motion.img
@@ -19,7 +20,7 @@ function Hero() {
             initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={{ opacity: 1, y: [0,1,0,-1,0]}}
             transition={{ duration: 2, ease: "easeInOut" }}
-            className="relative w-full max-w-md mix-blend-screen"
+            className="relative w-full max-w-lg rounded-2xl border border-violet-400/15 shadow-[0_28px_90px_rgba(2,6,23,0.65)]"
           />
         </div>
       </div>

@@ -1,10 +1,13 @@
-import { Bell, Search, Menu } from "lucide-react";
+import { Bell, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useUI } from "../../context/UIContext";
 
 function Topbar({ onMenuClick }) {
+  const { profile } = useUI();
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-800/60 bg-[#060B17]/80 px-4 backdrop-blur-xl sm:h-20 sm:px-8">
+    <header className="dashboard-topbar">
 
-      {/* Left: Mobile menu + Search */}
+      {/* Left: mobile navigation */}
       <div className="flex items-center gap-3">
         <button
           onClick={onMenuClick}
@@ -12,18 +15,6 @@ function Topbar({ onMenuClick }) {
         >
           <Menu size={22} />
         </button>
-
-        <div className="hidden w-80 items-center rounded-xl border border-slate-800/60 bg-white/5 px-4 sm:flex">
-          <Search className="text-slate-500" size={18} />
-          <input
-            type="text"
-            placeholder="Search anything..."
-            className="w-full bg-transparent px-3 py-2.5 text-sm text-white outline-none placeholder:text-slate-500"
-          />
-          <kbd className="hidden rounded-md border border-slate-700 bg-slate-800/50 px-2 py-0.5 text-[10px] text-slate-500 md:inline">
-            ⌘K
-          </kbd>
-        </div>
       </div>
 
       {/* Right */}
@@ -35,15 +26,13 @@ function Topbar({ onMenuClick }) {
         </button>
 
         {/* Profile */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-purple-600 text-sm font-bold text-white shadow-lg shadow-violet-500/20">
-            R
-          </div>
+        <Link to="/dashboard/settings" aria-label="Open profile settings" className="flex items-center gap-3 rounded-xl p-1 transition hover:bg-white/5">
+          {profile.avatar ? <img src={profile.avatar} alt="Profile" className="h-9 w-9 rounded-full object-cover shadow-lg shadow-violet-500/20" /> : <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-purple-600 text-sm font-bold text-white shadow-lg shadow-violet-500/20">{profile.name.slice(0, 1).toUpperCase()}</div>}
           <div className="hidden sm:block">
-            <h3 className="text-sm font-semibold text-white">Rimjhim</h3>
-            <p className="text-xs text-slate-500">Student</p>
+            <h3 className="text-sm font-semibold text-white">{profile.name}</h3>
+            <p className="text-xs text-slate-500">{profile.role}</p>
           </div>
-        </div>
+        </Link>
       </div>
 
     </header>

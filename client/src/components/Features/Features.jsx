@@ -3,8 +3,8 @@ import FeaturesCard from "./FeaturesCard";
 
 function Features() {
   return (
-    <section id="features" className="border-t border-slate-800/60 bg-[#060B17] py-20 sm:py-28 lg:py-32">
-      <div className="mx-auto max-w-7xl px-6 sm:px-8">
+    <section id="features" className="border-t border-slate-800/60 bg-[#060B17] pb-24 pt-20 sm:pb-32 sm:pt-28 lg:pb-36 lg:pt-32">
+      <div className="site-container">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-medium uppercase tracking-[0.25em] text-violet-400">
             Features
@@ -19,7 +19,7 @@ function Features() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 sm:mt-20 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-16 grid gap-6 sm:mt-20 sm:gap-7 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
 
           {features.map((feature) => (
             <FeaturesCard

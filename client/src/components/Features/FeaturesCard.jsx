@@ -7,7 +7,7 @@ function FeaturesCard({ icon: Icon, title, description }) {
         border
         border-slate-800
         bg-slate-900/60
-        p-8
+        flex flex-col gap-4 p-6 sm:p-7
         transition-all
         duration-300
         hover:-translate-y-3
@@ -17,7 +17,6 @@ function FeaturesCard({ icon: Icon, title, description }) {
     >
       <div
         className="
-          mb-6
           flex
           h-16
           w-16
@@ -35,7 +34,7 @@ function FeaturesCard({ icon: Icon, title, description }) {
         />
       </div>
 
-      <h3 className="mb-4 text-2xl font-semibold text-white">
+      <h3 className="text-2xl font-semibold text-white">
         {title}
       </h3>
 

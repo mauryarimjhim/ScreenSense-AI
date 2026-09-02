@@ -34,11 +34,11 @@ function Sidebar({ onClose }) {
   };
 
   return (
-    <aside className="flex h-screen w-72 flex-col border-r border-slate-800/60 bg-[#0B1120]">
+    <aside className="dashboard-sidebar">
 
       {/* Logo */}
       <div className="flex items-center justify-between border-b border-slate-800/60 p-6">
-        <NavLink to="/dashboard" className="flex items-center gap-3" onClick={onClose}>
+        <NavLink to="/" className="flex items-center gap-3" onClick={onClose}>
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-purple-600 shadow-lg shadow-violet-500/20">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
@@ -57,7 +57,7 @@ function Sidebar({ onClose }) {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
+      <nav className="flex flex-1 flex-col gap-1.5 overflow-y-auto px-3 py-4">
         <p className="mb-3 px-4 text-xs font-semibold uppercase tracking-wider text-slate-500">
           Menu
         </p>
@@ -69,7 +69,7 @@ function Sidebar({ onClose }) {
             end={item.path === "/dashboard"}
             onClick={onClose}
             className={({ isActive }) =>
-              `mb-1 flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
+              `flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200 ${
                 isActive
                   ? "bg-violet-600/15 text-violet-400 shadow-sm shadow-violet-500/5"
                   : "text-slate-400 hover:bg-white/5 hover:text-white"
@@ -89,18 +89,8 @@ function Sidebar({ onClose }) {
         ))}
       </nav>
 
-      {/* User + Logout */}
+      {/* Logout remains anchored below the scrollable navigation. */}
       <div className="border-t border-slate-800/60 p-4">
-        <div className="mb-3 flex items-center gap-3 rounded-xl bg-white/5 px-4 py-3">
-          <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-violet-500 to-purple-600 text-sm font-bold text-white">
-            R
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-white">Rimjhim</p>
-            <p className="text-xs text-slate-500">Student</p>
-          </div>
-        </div>
-
         <button
           onClick={handleLogout}
           className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-red-400 transition hover:bg-red-500/10 hover:text-red-300"

@@ -1,6 +1,6 @@
 function HeroStats() {
   return (
-    <div className="flex flex-wrap gap-8 sm:gap-10 text-left text-sm text-slate-300">
+    <div className="flex flex-wrap justify-center gap-8 text-left text-sm text-slate-300 sm:gap-10 lg:justify-start">
       <div>
         <h3 className="text-3xl font-bold text-violet-400">10K+</h3>
         <p>Users</p>

@@ -150,7 +150,7 @@ function RegisterForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 py-4 font-semibold text-white transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-lg shadow-violet-900/40 transition hover:-translate-y-0.5 hover:from-violet-500 hover:to-purple-500 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? "Creating account..." : "Create Account"}
       </button>
@@ -165,7 +165,7 @@ function RegisterForm() {
 
       <button
         type="button"
-        className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-700 py-4 text-white transition hover:border-violet-500"
+        className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-700 px-6 py-4 text-white transition hover:border-violet-500 hover:bg-white/5"
       >
         <img src="/google.svg" alt="Google" className="h-5" />
         Continue with Google

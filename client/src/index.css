@@ -2,6 +2,9 @@
 
 /* ── Design System ── */
 :root {
+  --sidebar-width: 17rem;
+  --content-padding: clamp(1.25rem, 2.5vw, 2.5rem);
+  --section-gap: clamp(1.25rem, 2vw, 1.5rem);
   --bg-primary: #060B17;
   --bg-secondary: #0B1120;
   --bg-card: #101827;
@@ -29,6 +32,38 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Theme settings use one root attribute so the preference applies across routes. */
+html[data-theme="light"] body,
+html[data-theme="light"] .app-shell,
+html[data-theme="light"] .bg-\[\#060B17\] { background: #f4f7fb !important; color: #0f172a; }
+html[data-theme="light"] .dashboard-sidebar,
+html[data-theme="light"] .dashboard-topbar,
+html[data-theme="light"] .glass-card,
+html[data-theme="light"] .bg-\[\#0B1120\],
+html[data-theme="light"] .bg-\[\#101827\],
+html[data-theme="light"] .bg-\[\#080e1b\] { background: #ffffff !important; border-color: #dbe3ef; }
+html[data-theme="light"] .bg-white\/5 { background: rgba(15, 23, 42, .04) !important; }
+html[data-theme="light"] .text-white { color: #0f172a !important; }
+html[data-theme="light"] .text-slate-400 { color: #475569 !important; }
+html[data-theme="light"] .text-slate-500 { color: #64748b !important; }
+html[data-theme="light"] .border-slate-800,
+html[data-theme="light"] .border-slate-800\/60 { border-color: #dbe3ef !important; }
+
+#root { min-height: 100vh; }
+
+/* Shared authenticated application shell: only the main panel scrolls. */
+.app-shell { height: 100dvh; min-height: 100vh; overflow: hidden; }
+.app-shell__inner { display: flex; height: 100%; min-width: 0; }
+.app-shell__sidebar { width: var(--sidebar-width); height: 100%; flex: 0 0 var(--sidebar-width); }
+.dashboard-sidebar { display: flex; height: 100%; min-height: 100vh; width: 100%; flex-direction: column; overflow: hidden; border-right: 1px solid rgba(30, 41, 59, .6); background: #0B1120; }
+.app-shell__main { display: flex; min-width: 0; flex: 1 1 auto; flex-direction: column; overflow: hidden; }
+.dashboard-topbar { display: flex; height: 5rem; flex: 0 0 auto; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(30, 41, 59, .6); background: rgba(6, 11, 23, .88); padding-inline: var(--content-padding); backdrop-filter: blur(20px); }
+.dashboard-main-scroll { min-height: 0; flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding: var(--content-padding) var(--content-padding) calc(var(--content-padding) + 1rem); }
+.dashboard-content { width: 100%; min-width: 0; max-width: none; }
+
+/* Consistent landing-page width and responsive rhythm. */
+.site-container { width: min(100% - 3rem, 1440px); margin-inline: auto; }
 
 /* ── Scrollbar ── */
 ::-webkit-scrollbar {
@@ -108,21 +143,15 @@ body {
 }
 
 /* Dashboard layout: shared breathing room for every analytics page. */
-.dashboard-content {
-  min-width: 0;
-}
-
 .dashboard-page {
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--section-gap);
 }
 
 @media (min-width: 640px) {
-  .dashboard-page {
-    gap: 2.5rem;
-  }
+  .dashboard-page { gap: var(--section-gap); }
 }
 
 .dashboard-page > * + * {
@@ -146,22 +175,16 @@ body {
 }
 
 .dashboard-page .grid {
-  column-gap: 1.25rem;
-  row-gap: 1.25rem;
+  column-gap: var(--section-gap);
+  row-gap: var(--section-gap);
 }
 
 @media (min-width: 640px) {
-  .dashboard-page .grid {
-    column-gap: 1.5rem;
-    row-gap: 1.5rem;
-  }
+  .dashboard-page .grid { column-gap: var(--section-gap); row-gap: var(--section-gap); }
 }
 
 @media (min-width: 1024px) {
-  .dashboard-page .grid {
-    column-gap: 1.75rem;
-    row-gap: 1.75rem;
-  }
+  .dashboard-page .grid { column-gap: var(--section-gap); row-gap: var(--section-gap); }
 }
 
 .dashboard-page h1 {
@@ -215,4 +238,14 @@ body {
 
 .recharts-tooltip-item {
   color: #94A3B8 !important;
+}
+
+@media (max-width: 1023px) {
+  .app-shell__sidebar { width: var(--sidebar-width); }
+  .dashboard-topbar { height: 4rem; }
+}
+
+@media (max-width: 639px) {
+  .site-container { width: min(100% - 2rem, 1440px); }
+  .dashboard-main-scroll { padding: 1rem; }
 }

@@ -2,6 +2,7 @@ import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authApi } from "../../services/api";
+import { useUI } from "../../context/UIContext";
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -10,6 +11,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { updateProfile } = useUI();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,6 +22,9 @@ function LoginForm() {
       const data = await authApi.login({ email, password });
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
+      updateProfile({ name: data.user.name, email: data.user.email });
+      // Lets the locally installed tracker use the same signed-in account.
+      window.postMessage({ type: "SCREENSENSE_AUTH", token: data.token }, window.location.origin);
       navigate("/dashboard");
     } catch (err) {
       setError(err.message);
@@ -102,7 +107,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 py-4 font-semibold text-white transition hover:scale-[1.02] disabled:cursor-not-allowed disabled:opacity-60"
+        className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 px-6 py-4 font-semibold text-white shadow-lg shadow-violet-900/40 transition hover:-translate-y-0.5 hover:from-violet-500 hover:to-purple-500 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? "Logging in..." : "Log In"}
       </button>
@@ -117,7 +122,7 @@ function LoginForm() {
 
       <button
         type="button"
-        className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-700 py-4 text-white transition hover:border-violet-500"
+        className="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-700 px-6 py-4 text-white transition hover:border-violet-500 hover:bg-white/5"
       >
         <img
           src="https://www.svgrepo.com/show/475656/google-color.svg"
