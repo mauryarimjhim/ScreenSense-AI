@@ -3,7 +3,11 @@ import FeaturesCard from "./FeaturesCard";
 
 function Features() {
   return (
-    <section id="features" className="border-t border-slate-800/60 bg-[#060B17] pb-24 pt-20 sm:pb-32 sm:pt-28 lg:pb-36 lg:pt-32">
+    
+      <section
+             id="features"
+             className="bg-[#060B17] pb-32 pt-20 sm:pb-36 sm:pt-28 lg:pb-44 lg:pt-32"
+                >
       <div className="site-container">
         <div className="mx-auto max-w-3xl text-center">
           <p className="text-sm font-medium uppercase tracking-[0.25em] text-violet-400">

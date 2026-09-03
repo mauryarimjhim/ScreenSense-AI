@@ -10,6 +10,18 @@ const usageSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    deviceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Device",
+      default: null,
+      index: true,
+    },
+    source: {
+      type: String,
+      enum: ["legacy", "desktop", "android", "ios", "chrome"],
+      default: "legacy",
+    },
+    idempotencyKey: { type: String, default: null },
 
 
     // ------------------------------------------
@@ -93,6 +105,8 @@ const usageSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+usageSchema.index({ deviceId: 1, idempotencyKey: 1 }, { unique: true, sparse: true });
 
 
 module.exports = mongoose.model("Usage", usageSchema);

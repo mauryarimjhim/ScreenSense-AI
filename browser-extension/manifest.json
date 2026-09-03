@@ -3,17 +3,18 @@
   "name": "ScreenSense AI Tracker",
   "version": "1.0.0",
   "description": "Tracks browser activity for ScreenSense AI",
-  "permissions": [
-    "tabs"
-  ],
+  "permissions": ["tabs", "storage", "alarms", "windows"],
   "host_permissions": [
-    "*://*.instagram.com/*",
-    "*://*.youtube.com/*",
-    "*://*.linkedin.com/*",
-    "*://*.spotify.com/*",
-    "http://127.0.0.1:5000/*"
+    "<all_urls>",
+    "http://127.0.0.1:5000/*",
+    "http://localhost:5000/*"
   ],
   "background": {
     "service_worker": "background.js"
-  }
+  },
+  "content_scripts": [{
+    "matches": ["http://localhost/*", "http://127.0.0.1/*"],
+    "js": ["dashboard-auth.js"],
+    "run_at": "document_start"
+  }]
 }

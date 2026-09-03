@@ -8,12 +8,17 @@ const productivityRoutes = require("./routes/productivityRoutes");
 const analyticsRoutes = require("./routes/analyticsRoutes");
 const goalRoutes = require("./routes/goalRoutes");
 const insightRoutes = require("./routes/insightRoutes");
+const deviceRoutes = require("./routes/deviceRoutes");
 
 const { isConnected } = require("./config/db");
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = (process.env.CLIENT_ORIGINS || "").split(",").map((origin) => origin.trim()).filter(Boolean);
+app.use(cors({ origin(origin, callback) {
+  if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) return callback(null, true);
+  return callback(new Error("Origin not allowed by CORS"));
+} }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
@@ -52,6 +57,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/goals", goalRoutes);
 
 app.use("/api/insights", insightRoutes);
+app.use("/api/devices", deviceRoutes);
 
 //api health check endpoint
 app.get("/", (req, res) => {

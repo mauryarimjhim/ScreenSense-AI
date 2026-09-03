@@ -11,6 +11,7 @@ function Landing(){
               <Features/>
             </main>
             <Footer/>
+            
         </div>
     );
 }

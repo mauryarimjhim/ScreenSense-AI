@@ -9,7 +9,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 w-full border-b border-slate-800 bg-[#060B17]/90 backdrop-blur-md">
+      <nav className="sticky top-0 z-50 w-full bg-[#060B17]/90 backdrop-blur-md">
         <div className="site-container flex h-16 items-center justify-between gap-4 sm:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">

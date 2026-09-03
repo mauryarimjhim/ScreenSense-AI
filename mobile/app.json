@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "ScreenSense AI",
+    "slug": "screensense-ai",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "android": {
+      "package": "com.screensense.ai",
+      "usesCleartextTraffic": true
+    },
+    "ios": { "bundleIdentifier": "com.screensense.ai" }
+  }
+}

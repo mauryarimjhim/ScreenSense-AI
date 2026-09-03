@@ -7,7 +7,7 @@ function FeaturesCard({ icon: Icon, title, description }) {
         border
         border-slate-800
         bg-slate-900/60
-        flex flex-col gap-4 p-6 sm:p-7
+        flex flex-col gap-4 p-6 pl-7 sm:p-7 sm:pl-8
         transition-all
         duration-300
         hover:-translate-y-3

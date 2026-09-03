@@ -4,10 +4,63 @@ let activityStartTime = null;
 const activityUsage = {};
 
 const API_URL = "http://127.0.0.1:5000";
-const JWT_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhN2IwZGQ5YzMzYjczZjM5ODgxMGU1NSIsImlhdCI6MTc4NjQ0OTM4MiwiZXhwIjoxNzg3MDU0MTgyfQ.baFyQbM9hhUPmjHhB8dGhWMu-OrVhgdgrHjUmWOGZOs";
+const UPLOAD_ALARM = "screensense-upload";
+
+function saveTrackingState() {
+  chrome.storage.local.set({ activityUsage, currentActivity, activityStartTime });
+}
+
+async function restoreTrackingState() {
+  const saved = await chrome.storage.local.get(["activityUsage", "currentActivity", "activityStartTime"]);
+  Object.assign(activityUsage, saved.activityUsage || {});
+  currentActivity = saved.currentActivity || null;
+  activityStartTime = saved.activityStartTime || null;
+}
+
+async function getToken() {
+  const { authToken } = await chrome.storage.local.get("authToken");
+  return authToken;
+}
+
+function getCategory(appName, activity) {
+  const productive = {
+    LinkedIn: ["jobs"],
+    YouTube: ["search"],
+  };
+
+  const unproductive = {
+    YouTube: ["shorts"],
+    Instagram: ["reels", "stories", "explore"],
+  };
+
+  if (productive[appName]?.includes(activity)) {
+    return "productive";
+  }
+
+  if (unproductive[appName]?.includes(activity)) {
+    return "unproductive";
+  }
+
+  return "neutral";
+}
+
+function getDominantActivity(activities) {
+  const entries = Object.entries(activities);
+
+  if (entries.length === 0) {
+    return null;
+  }
+
+  return entries.sort((a, b) => b[1] - a[1])[0][0];
+}
 
 async function sendUsageToBackend() {
   try {
+    const token = await getToken();
+    if (!token) {
+      console.warn("ScreenSense: open the dashboard and sign in before tracking usage.");
+      return;
+    }
     for (const [appName, activities] of Object.entries(activityUsage)) {
 
       // Calculate total time for this app
@@ -16,12 +69,17 @@ async function sendUsageToBackend() {
         0
       );
 
-      const totalMinutes = Math.round(totalSeconds / 60);
+      const totalMinutes = Math.floor(totalSeconds / 60);
 
       // Don't send empty usage
       if (totalMinutes <= 0) {
         continue;
       }
+
+      const dominantActivity = getDominantActivity(activities);
+      const category = dominantActivity
+        ? getCategory(appName, dominantActivity)
+        : "neutral";
 
       const response = await fetch(
         `${API_URL}/api/usage`,
@@ -30,7 +88,7 @@ async function sendUsageToBackend() {
 
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${JWT_TOKEN}`
+            "Authorization": `Bearer ${token}`
           },
 
           body: JSON.stringify({
@@ -41,9 +99,9 @@ async function sendUsageToBackend() {
 
             totalTime: totalMinutes,
 
-            activities: activities,
+            activities: Object.fromEntries(Object.entries(activities).map(([name, seconds]) => [name, Math.round(seconds / 60)])),
 
-            category: "neutral"
+            category: category
           })
         }
       );
@@ -57,6 +115,9 @@ async function sendUsageToBackend() {
 
       if (data.success) {
         activityUsage[appName] = {};
+        saveTrackingState();
+      } else {
+        console.error("ScreenSense upload rejected:", data.message || data);
         }
     }
 
@@ -187,7 +248,20 @@ function detectActivity(url) {
   }
 
 
-  return null;
+  // Track all normal web pages as browser screen time. Known services above
+  // retain their richer activity labels; other sites are grouped by hostname.
+  try {
+    const parsed = new URL(url);
+    if (!/^https?:$/.test(parsed.protocol)) return null;
+    const host = parsed.hostname.replace(/^www\./, "");
+    const appName = host.split(".")[0].replace(/[-_]/g, " ");
+    return {
+      appName: appName.charAt(0).toUpperCase() + appName.slice(1),
+      activity: "browsing",
+    };
+  } catch {
+    return null;
+  }
 }
 
 
@@ -273,7 +347,9 @@ if (!activityUsage[currentActivity.appName][currentActivity.activity]) {
   activityUsage[currentActivity.appName][currentActivity.activity] = 0;
 }
 
-activityUsage[currentActivity.appName][currentActivity.activity] += elapsedSeconds;
+  activityUsage[currentActivity.appName][currentActivity.activity] += elapsedSeconds;
+
+  saveTrackingState();
 
 console.log(
   "Total activity usage:",
@@ -288,6 +364,20 @@ console.log(
   currentActivity = null;
 
   activityStartTime = null;
+  saveTrackingState();
+}
+
+// Save elapsed time without ending the current session. The previous version
+// called this function but never defined it, preventing every upload.
+function flushCurrentActivity() {
+  if (!currentActivity || !activityStartTime) return;
+  const elapsedSeconds = Math.floor((Date.now() - activityStartTime) / 1000);
+  if (elapsedSeconds <= 0) return;
+  const { appName, activity } = currentActivity;
+  activityUsage[appName] ||= {};
+  activityUsage[appName][activity] = (activityUsage[appName][activity] || 0) + elapsedSeconds;
+  activityStartTime = Date.now();
+  saveTrackingState();
 }
 
 
@@ -356,7 +446,45 @@ chrome.tabs.onUpdated.addListener(
   }
 );
 
-setInterval(
-  sendUsageToBackend,
-  30 * 1000
-);
+// Do not count time while Chrome is not the focused application.
+chrome.windows.onFocusChanged.addListener((windowId) => {
+  if (windowId === chrome.windows.WINDOW_ID_NONE) {
+    stopTracking();
+    return;
+  }
+  chrome.tabs.query({ active: true, windowId }).then(([tab]) => {
+    if (tab?.id) checkTab(tab.id);
+  });
+});
+
+chrome.runtime.onMessage.addListener((message) => {
+  if (message?.type === "SCREENSENSE_AUTH") {
+    if (message.token) {
+      chrome.storage.local.set({ authToken: message.token });
+      console.log("ScreenSense: dashboard account connected.");
+    } else {
+      chrome.storage.local.remove("authToken");
+      console.log("ScreenSense: dashboard account disconnected.");
+    }
+  }
+});
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.alarms.create(UPLOAD_ALARM, { periodInMinutes: 1 });
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  chrome.alarms.create(UPLOAD_ALARM, { periodInMinutes: 1 });
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name !== UPLOAD_ALARM) return;
+  flushCurrentActivity();
+  sendUsageToBackend();
+});
+
+restoreTrackingState().then(async () => {
+  chrome.alarms.create(UPLOAD_ALARM, { periodInMinutes: 1 });
+  const [tab] = await chrome.tabs.query({ active: true, lastFocusedWindow: true });
+  if (tab?.id) checkTab(tab.id);
+});
