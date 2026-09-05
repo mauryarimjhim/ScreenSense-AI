@@ -1,7 +1,7 @@
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { authApi } from "../../services/api";
+import { API_BASE, authApi } from "../../services/api";
 import { useUI } from "../../context/UIContext";
 
 function LoginForm() {
@@ -24,7 +24,7 @@ function LoginForm() {
       localStorage.setItem("user", JSON.stringify(data.user));
       updateProfile({ name: data.user.name, email: data.user.email });
       // Lets the locally installed tracker use the same signed-in account.
-      window.postMessage({ type: "SCREENSENSE_AUTH", token: data.token }, window.location.origin);
+      window.postMessage({ type: "SCREENSENSE_AUTH", token: data.token, apiBase: API_BASE }, window.location.origin);
       navigate("/dashboard");
     } catch (err) {
       setError(err.message);

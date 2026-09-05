@@ -3,7 +3,7 @@ let activityStartTime = null;
 
 const activityUsage = {};
 
-const API_URL = "http://127.0.0.1:5000";
+const DEFAULT_API_BASE = "http://127.0.0.1:5000/api";
 const UPLOAD_ALARM = "screensense-upload";
 
 function saveTrackingState() {
@@ -20,6 +20,11 @@ async function restoreTrackingState() {
 async function getToken() {
   const { authToken } = await chrome.storage.local.get("authToken");
   return authToken;
+}
+
+async function getApiBase() {
+  const { apiBase } = await chrome.storage.local.get("apiBase");
+  return (apiBase || DEFAULT_API_BASE).replace(/\/$/, "");
 }
 
 function getCategory(appName, activity) {
@@ -61,6 +66,7 @@ async function sendUsageToBackend() {
       console.warn("ScreenSense: open the dashboard and sign in before tracking usage.");
       return;
     }
+    const apiBase = await getApiBase();
     for (const [appName, activities] of Object.entries(activityUsage)) {
 
       // Calculate total time for this app
@@ -82,7 +88,7 @@ async function sendUsageToBackend() {
         : "neutral";
 
       const response = await fetch(
-        `${API_URL}/api/usage`,
+        `${apiBase}/usage`,
         {
           method: "POST",
 
@@ -460,7 +466,11 @@ chrome.windows.onFocusChanged.addListener((windowId) => {
 chrome.runtime.onMessage.addListener((message) => {
   if (message?.type === "SCREENSENSE_AUTH") {
     if (message.token) {
-      chrome.storage.local.set({ authToken: message.token });
+      const updates = { authToken: message.token };
+      if (typeof message.apiBase === "string" && /^https?:\/\//.test(message.apiBase)) {
+        updates.apiBase = message.apiBase.replace(/\/$/, "");
+      }
+      chrome.storage.local.set(updates);
       console.log("ScreenSense: dashboard account connected.");
     } else {
       chrome.storage.local.remove("authToken");

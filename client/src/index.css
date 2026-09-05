@@ -32,11 +32,38 @@
     min-height: 100vh;
   }
 
+  .mobile-unsupported { display: none; }
+
   /* ── Selection ── */
   ::selection {
     background: rgba(139, 92, 246, 0.3);
     color: white;
   }
+}
+
+/* The tracker is currently supported on desktop only. Keep the application
+   inaccessible on compact/mobile screens instead of presenting a broken UI. */
+@media (max-width: 639px) {
+  .desktop-app { display: none; }
+  .mobile-unsupported {
+    display: grid;
+    min-height: 100dvh;
+    place-items: center;
+    padding: 1.5rem;
+    background: radial-gradient(circle at top, #1e1b4b 0%, #060b17 52%);
+  }
+  .mobile-unsupported__card {
+    width: min(100%, 28rem);
+    border: 1px solid rgba(167, 139, 250, .35);
+    border-radius: 1.25rem;
+    background: rgba(15, 23, 42, .88);
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, .35);
+  }
+  .mobile-unsupported__eyebrow { margin: 0 0 .75rem; color: #a78bfa; font-size: .875rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .mobile-unsupported h1 { margin: 0; font-size: 1.75rem; }
+  .mobile-unsupported p:last-child { margin: .75rem 0 0; color: #cbd5e1; line-height: 1.6; }
 }
 
 /* ── Components ── */

@@ -106,7 +106,20 @@ const usageSchema = new mongoose.Schema(
   }
 );
 
-usageSchema.index({ deviceId: 1, idempotencyKey: 1 }, { unique: true, sparse: true });
+// Only device-sync batches have an idempotency key. A sparse compound index
+// still indexes explicit null defaults, which incorrectly makes all legacy
+// browser uploads conflict with one another. Restrict uniqueness to real
+// device records instead.
+usageSchema.index(
+  { deviceId: 1, idempotencyKey: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      deviceId: { $type: "objectId" },
+      idempotencyKey: { $type: "string" },
+    },
+  }
+);
 
 
 module.exports = mongoose.model("Usage", usageSchema);

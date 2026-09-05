@@ -13,7 +13,7 @@
     "service_worker": "background.js"
   },
   "content_scripts": [{
-    "matches": ["http://localhost/*", "http://127.0.0.1/*"],
+    "matches": ["<all_urls>"],
     "js": ["dashboard-auth.js"],
     "run_at": "document_start"
   }]

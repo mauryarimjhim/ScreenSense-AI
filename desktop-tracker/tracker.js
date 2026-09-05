@@ -201,6 +201,11 @@ console.log("====================================");
 console.log("Tracking started...");
 console.log("Backend:", API_URL);
 
+if (!API_URL || !JWT_TOKEN) {
+  console.error("Missing API_URL or JWT_TOKEN. Copy .env.example to .env and fill in both values.");
+  process.exit(1);
+}
+
 
 // Check active application every second
 setInterval(trackUsage, 1000);
@@ -208,3 +213,9 @@ setInterval(trackUsage, 1000);
 
 // Send usage every 5 minutes
 setInterval(flushUsage, 5 * 60 * 1000);
+
+// Preserve any whole minutes when the tracker is stopped from the terminal.
+process.on("SIGINT", async () => {
+  await flushUsage();
+  process.exit(0);
+});

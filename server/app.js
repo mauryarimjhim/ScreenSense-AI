@@ -16,7 +16,10 @@ const app = express();
 
 const allowedOrigins = (process.env.CLIENT_ORIGINS || "").split(",").map((origin) => origin.trim()).filter(Boolean);
 app.use(cors({ origin(origin, callback) {
-  if (!origin || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) return callback(null, true);
+  // Browser-tracker requests originate from the installed Chrome extension.
+  // They still require a valid user token, but must pass CORS after deployment.
+  const isBrowserExtension = /^chrome-extension:\/\//.test(origin || "");
+  if (!origin || isBrowserExtension || allowedOrigins.length === 0 || allowedOrigins.includes(origin)) return callback(null, true);
   return callback(new Error("Origin not allowed by CORS"));
 } }));
 app.use(express.json());
