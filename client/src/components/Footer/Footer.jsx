@@ -43,7 +43,7 @@ function Footer() {
                   href={`mailto:${SUPPORT_EMAIL}`}
                   className="mt-1.5 block break-all text-sm font-medium text-violet-300 transition hover:text-violet-200 sm:text-base"
                 >
-                  {SUPPORT_EMAIL}
+                  rimjhimmaurya71@gmail.com
                 </a>
               </div>
             </div>
@@ -66,7 +66,7 @@ function Footer() {
                 </p>
 
                 <p className="mt-1.5 text-sm font-medium text-slate-200 sm:text-base">
-                  {DEVELOPER_NAME}
+                  Rimjhim Maurya
                 </p>
               </div>
             </div>

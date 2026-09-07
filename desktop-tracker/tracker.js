@@ -211,8 +211,8 @@ if (!API_URL || !JWT_TOKEN) {
 setInterval(trackUsage, 1000);
 
 
-// Send usage every 5 minutes
-setInterval(flushUsage, 5 * 60 * 1000);
+// Send completed minutes every minute so the dashboard stays near real time.
+setInterval(flushUsage, 60 * 1000);
 
 // Preserve any whole minutes when the tracker is stopped from the terminal.
 process.on("SIGINT", async () => {

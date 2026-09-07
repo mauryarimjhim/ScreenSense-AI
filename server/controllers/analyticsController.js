@@ -17,6 +17,20 @@ const createDaySeries = (count) => {
   });
 };
 
+// Linear regression over the latest active days gives an explainable local
+// forecast even when an AI provider is not configured.
+const predictNextDay = (items) => {
+  const values = items.filter((item) => item.total > 0).map((item) => item.total);
+  if (!values.length) return 0;
+  if (values.length === 1) return values[0];
+  const n = values.length;
+  const meanX = (n - 1) / 2;
+  const meanY = values.reduce((sum, value) => sum + value, 0) / n;
+  const denominator = values.reduce((sum, _, index) => sum + (index - meanX) ** 2, 0);
+  const slope = denominator ? values.reduce((sum, value, index) => sum + (index - meanX) * (value - meanY), 0) / denominator : 0;
+  return Math.max(0, Math.round(meanY + slope * (n - meanX)));
+};
+
 // ======================================================
 // FEATURE ANALYTICS
 // GET /api/analytics/features
@@ -89,7 +103,7 @@ exports.getFeatureAnalytics = async (req, res) => {
       apps: appUsage,
       hourly,
       activities: Object.entries(activities).map(([name, minutes]) => ({ name, minutes })).sort((a, b) => b.minutes - a.minutes),
-      predictions: { tomorrowMinutes: averageScreenTime, productivityScore: averageProductivity, apps: appForecast, confidence: Math.min(95, activeDays.length * 14) },
+      predictions: { tomorrowMinutes: predictNextDay(lastSevenDays), method: "linear_regression", productivityScore: averageProductivity, apps: appForecast, confidence: Math.min(95, activeDays.length * 14) },
       reports,
       goals,
     });

@@ -1,5 +1,6 @@
 let currentActivity = null;
 let activityStartTime = null;
+let dashboardOrigin = null;
 
 const activityUsage = {};
 
@@ -11,10 +12,11 @@ function saveTrackingState() {
 }
 
 async function restoreTrackingState() {
-  const saved = await chrome.storage.local.get(["activityUsage", "currentActivity", "activityStartTime"]);
+  const saved = await chrome.storage.local.get(["activityUsage", "currentActivity", "activityStartTime", "dashboardOrigin"]);
   Object.assign(activityUsage, saved.activityUsage || {});
   currentActivity = saved.currentActivity || null;
   activityStartTime = saved.activityStartTime || null;
+  dashboardOrigin = saved.dashboardOrigin || null;
 }
 
 async function getToken() {
@@ -259,6 +261,9 @@ function detectActivity(url) {
   try {
     const parsed = new URL(url);
     if (!/^https?:$/.test(parsed.protocol)) return null;
+    // The dashboard itself reports its active time through the built-in session
+    // tracker, so the optional extension must not record it a second time.
+    if (dashboardOrigin && parsed.origin === dashboardOrigin) return null;
     const host = parsed.hostname.replace(/^www\./, "");
     const appName = host.split(".")[0].replace(/[-_]/g, " ");
     return {
@@ -470,7 +475,14 @@ chrome.runtime.onMessage.addListener((message) => {
       if (typeof message.apiBase === "string" && /^https?:\/\//.test(message.apiBase)) {
         updates.apiBase = message.apiBase.replace(/\/$/, "");
       }
+      if (typeof message.dashboardOrigin === "string" && /^https?:\/\//.test(message.dashboardOrigin)) {
+        dashboardOrigin = message.dashboardOrigin;
+        updates.dashboardOrigin = dashboardOrigin;
+      }
       chrome.storage.local.set(updates);
+      chrome.tabs.query({ active: true, lastFocusedWindow: true }).then(([tab]) => {
+        if (tab?.id) checkTab(tab.id);
+      });
       console.log("ScreenSense: dashboard account connected.");
     } else {
       chrome.storage.local.remove("authToken");

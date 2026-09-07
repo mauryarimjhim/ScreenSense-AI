@@ -2,10 +2,14 @@ import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Topbar from './Topbar';
 import { useState } from 'react';
+import useDashboardSessionTracker from "../../hooks/useDashboardSessionTracker";
+import useNotifications from "../../hooks/useNotifications";
 
 
 function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  useDashboardSessionTracker();
+  useNotifications();
 
   return (
     <div className="app-shell bg-[#060B17] text-white">

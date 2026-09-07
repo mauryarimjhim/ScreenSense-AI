@@ -61,6 +61,13 @@ export const dashboardApi = {
 };
 
 export const usageApi = {
+  add: (token, payload, options = {}) =>
+    request("/usage", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: JSON.stringify(payload),
+      ...options,
+    }),
   getUsage: (token) =>
     request("/usage", {
       method: "GET",
@@ -102,6 +109,11 @@ export const insightsApi = {
         Authorization: `Bearer ${token}`,
       },
     }),
+};
+
+export const notificationApi = {
+  list: (token) => request("/notifications", { headers: { Authorization: `Bearer ${token}` } }),
+  markRead: (token, id) => request(`/notifications/${id}/read`, { method: "PATCH", headers: { Authorization: `Bearer ${token}` } }),
 };
 
 export const goalsApi = {
